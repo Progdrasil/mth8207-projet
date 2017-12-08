@@ -1,0 +1,23 @@
+# Projet final MTH8207
+## Plan
+- [ ] Ecrire intro - Raphael
+- [ ] Condition initiales - Raphael
+	- [ ] trouver condition a R=0
+- [ ] Forme Variationelle - Raphael
+	- [ ] Trouver forme faible
+	- [ ] demontrer pblm bien pose pour une/des fonctions de phi
+- [ ] Resolution - les deux
+	- [ ] code
+	- [ ] Verification avec methode analytique
+- [ ] taux de convergence norme L2 et H1 - Rene
+	 - [ ] fonction de calcul L2
+	 - [ ] fonction de calcul H1
+	 - [ ] fonction de calcul de taux de convergence
+	 - [ ] test avec parabole
+	 - [ ] test avec une gaussienne
+- [ ] Estimer taux de convergence qte d'interets - Rene
+	- [ ] lire et COMPRENDRE les diapos
+- [ ] commenter resultats
+	 - [ ] Post processing
+	 - [ ] comparaison avec methode analytique
+	 - [ ] 2 solutions a comparer
