@@ -1,4 +1,4 @@
-clc
+% clc
 clear all
 close all
 %*******************main code for the 1D finite element solver*************
@@ -6,6 +6,8 @@ h = 2.^(2:13);
 xMin=0;
 xMax=1;
 p = 1;
+
+fprintf('h \t\t ||u||L2 \t ||e||L2 \t log||e||L2 \t ||u||H1\n')
 for i = 1:length(h)
 %**************************build mesh**************************************
 	nEls=(xMax - xMin) * h(i);
@@ -51,27 +53,19 @@ for i = 1:length(h)
 	xt = xMin:1/(h(i) * p):xMax;
 	x_true = xMin:0.001:xMax;
 	xt = xt';
-	kt = eps;
 	ut = xt .^ 2;
 	u_true = x_true .^ 2;
 
-	%plot the solution u and its derivative
-	% figure(i)
-	% postProc(nEls,nodes,connect,elDof,dFreedom,pDeg,pType,u);
-	% hold on
-	% plot(xt, u)
-	% plot(x_true, u_true)
-	% hold off
+	% estimation de l'erreur en L2
+	normeU(i) = L2(u, xt);
+	[normeE(i), TauxE(i)] = tauxL2(ut, u, xt, 1/h(i), p);
 
-	% estimation de l'erreur
-	h_max = 1/h(i);
-	C = L2(ut - u, xt);
+	% estimation de l'erreur en H1
+	normeUH1(i) = H1(ut, xt, 1/h(i));
 
-	normeE(i) = C * h_max^p;
-	TauxE(i) = -1 * log(C) - p*log(1/h_max);
-	fprintf('1/%d, \t %5.4e, \t %5.4f\n', h(i), normeE(i), TauxE(i));
+	fprintf('1/%4d \t %8.7f \t %3.2e \t %5.4f \t\t %8.7f\n', h(i), normeU(i), normeE(i), TauxE(i), normeUH1(i));
 end
 
 figure
-title('taux de convergence')
+title('taux de convergence L_2')
 loglog(log(h), TauxE)
