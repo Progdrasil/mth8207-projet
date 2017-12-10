@@ -4,10 +4,10 @@ m=max(max(dFreedom));
 Kbc=K;
 Fbc=F;
 %set dirichlet boundary values
-u0(:,1)=zeros(m,1);  
-u0(:,2)=zeros(m,1); %set different boundary points to different 
+u0(:,1)=zeros(m,1);
+u0(:,2)=zeros(m,1); %set different boundary points to different
 u0(1,1) = 0;
-u0(m,2) = 0;
+u0(m,2) = 1;
 
 %set Neumann boundary values
 gamma=zeros(nB,1);
@@ -30,16 +30,16 @@ for nb=1:nB
         Kbc(:,c)=0;
         Kbc(c,c)=1;
     end
-    
+
     if bt==2            %Neumann
         Fbc(c)=Fbc(c)-k*gamma(nb)/alpha(nb);
     end
-   
+
    % if bt==3            %Robin
    %     Kbc(c,c)=Kbc(c,c)+betaR;
    %     Fbc(c)=Fbc(c)+gammaR;
    % end
-     
+
 end
 K=Kbc;
 F=Fbc;
