@@ -10,10 +10,10 @@
 	- [ ] code
 	- [ ] Verification avec methode analytique
 - [ ] taux de convergence norme L2 et H1 - Rene
-	 - [ ] fonction de calcul L2
-	 - [ ] fonction de calcul H1
-	 - [ ] fonction de calcul de taux de convergence
-	 - [ ] test avec parabole
+	 - [X] fonction de calcul L2
+	 - [X] fonction de calcul H1
+	 - [X] fonction de calcul de taux de convergence
+	 - [X] test avec parabole
 	 - [ ] test avec une gaussienne
 - [ ] Estimer taux de convergence qte d'interets - Rene
 	- [ ] lire et COMPRENDRE les diapos

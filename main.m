@@ -3,7 +3,7 @@ clear all
 close all
 %*******************main code for the 1D finite element solver*************
 h = 2.^(2:13);
-xMin=0;
+xMin=-1;
 xMax=1;
 p = 1;
 
