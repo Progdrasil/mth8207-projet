@@ -7,7 +7,7 @@ xMin=0;
 xMax=1;
 p = 1;
 
-fprintf('h \t\t ||u||L2 \t ||e||L2 \t log||e||L2 \t ||u||H1\n')
+fprintf('h \t\t ||u||L2 \t ||e||L2 \t log||e||L2 \t ||u||H1 \t ||e||H1 \t log||e||H1\n')
 for i = 1:length(h)
 %**************************build mesh**************************************
 	nEls=(xMax - xMin) * h(i);
@@ -57,15 +57,20 @@ for i = 1:length(h)
 	u_true = x_true .^ 2;
 
 	% estimation de l'erreur en L2
-	normeU(i) = L2(u, xt);
-	[normeE(i), TauxE(i)] = tauxL2(ut, u, xt, 1/h(i), p);
+	normeUL2(i) = L2(u, xt);
+	[normeEL2(i), TauxEL2(i)] = tauxConv(ut, u, xt, 1/h(i), p, 'l2');
 
 	% estimation de l'erreur en H1
 	normeUH1(i) = H1(ut, xt, 1/h(i));
+	[normeEH1(i), TauxEH1(i)] = tauxConv(ut, u, xt, 1/h(i), p, 'h1');
 
-	fprintf('1/%4d \t %8.7f \t %3.2e \t %5.4f \t\t %8.7f\n', h(i), normeU(i), normeE(i), TauxE(i), normeUH1(i));
+	fprintf('1/%4d \t %8.7f \t %3.2e \t %5.4f \t\t %8.7f \t %3.2e \t %5.4f\n', h(i), normeUL2(i), normeEL2(i), TauxEL2(i), normeUH1(i), normeEH1(i), TauxEH1(i));
 end
 
 figure
 title('taux de convergence L_2')
-loglog(log(h), TauxE)
+hold on
+loglog(log(h), TauxEL2)
+loglog(log(h), TauxEH1)
+hold off
+legend('L2', 'H1', 'location', 'best')
