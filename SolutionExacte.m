@@ -1,9 +1,10 @@
+function [r phir]=SolutionExacte(nEls,mfibre)
 %Solution exacte
 
 %Constantes
 nEls=50*4;
 ng = 1.457420;
-nc = 1.462420;
+nc = ng+0.005;
 rho = 8.335e-6;
 lambda = 0.6328e-6;
 k=2*pi/lambda;
@@ -22,17 +23,27 @@ for n=1:3
     phi1=@(x)besselj(0,U(n).*x./rho)./besselj(0,U(n));
     phi2=@(x)besselk(0,W(n).*x./rho)./besselk(0,W(n));
     
-    r = 0:rho/(nEls-1):2*rho;
+    r = 0:rho/(nEls-1):mfibre;
     nb = 1;
-    for x = 0:rho/(nEls-1):2*rho
+    for x = 0:rho/(nEls-1):mfibre
         if x < rho
-            phi(nb,n) = phi1(x);
+            phir(nb,n) = phi1(x);
         else
-            phi(nb,n) = phi2(x);
+            phir(nb,n) = phi2(x);
         end
         nb = nb+1;
     end
+%     Nlm = -rho/4*betar(n)/k*sqrt(8.854187817e-12/1.2566370614e-6);
+%     Nlm = Nlm*2*pi*besselj(-1,U(n))*besselj(1,U(n))/(besselj(0,U(n)).^2);
+%     NLM = Nlm*V.^2./
+    phirN(:,n) = phir(:,n)./max(abs(phir(:,n)));
+    if phirN(1,n) <= 0
+        phirN(:,n) = -phirN(:,n)
+    end
     hold on
-    plot(r,phi(:,n))
+    plot(r,phir(:,n))
 end
+hold off
 betar
+
+end

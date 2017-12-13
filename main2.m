@@ -1,4 +1,4 @@
-function [K]=main2(nEls, xMin, xMax)
+function [K]=main2(nEls, xMin, xMax, xn)
 clc
 %*******************main code for the 1D finite element solver*************
 
@@ -35,7 +35,7 @@ pType(:,1)=2;   %set element type: 1=Lagrangian, 2=hierarchical
 syms x
 k=@(x)0;
 c=@(x)0;
-b=@(x)x;
+b=@(x)x.^(xn);
 f=@(x)0;
 %f=@(x)(heaviside(x-.5)-heaviside(x-.6))*-1;
 [K,F]=element(nEls,nodes,connect,xiQ,wQ,pDeg,pType,elDof,dFreedom,k,c,b,f);
