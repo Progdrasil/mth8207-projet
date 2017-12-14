@@ -8,7 +8,7 @@ xMax=1;
 p = 1;
 
 fprintf('h \t\t ||e||L2 \t alpha_L2 \t ||e||H1 \t alpha_H1\n')
-for i = 1:10
+for i = 1:9
 	if i > 1
 		h(i) = h(i-1) * 2;
 	end
@@ -53,22 +53,15 @@ for i = 1:10
 
 %**************post-processing*********************************************
 	% calcul de lequation reel
-	xt = xMin:1/(h(i) * p):xMax;
-	x_true = xMin:0.001:xMax;
-	xt = xt';
-	ut = xt .^ 2;
+	xh = xMin:1/(h(i) * p):xMax;
+	x_true = xMin:0.0001:xMax;
 	u_true = x_true .^ 2;
-	figure
-	hold on
-	plot(x_true, u_true)
-	plot(xt, u)
-	hold off
 
 	% estimation de l'erreur en L2
-	normeEL2(i) = L2(u - ut, xt);
+	normeEL2(i) = L2(u, xh, u_true, x_true);
 
 	% estimation de l'erreur en H1
-	normeEH1(i) = H1(u - ut, xt, 1/h(i));
+	normeEH1(i) = H1(u, xh, 1/h(i), u_true, x_true);
 	if i > 1
 		% estimation taux de convergence en L2
 		TauxEL2(i) = tauxConv(normeEL2(i), normeEL2(i-1), 1/h(i), 1/h(i-1));
@@ -86,7 +79,19 @@ end
 figure
 title('taux de convergence L_2')
 hold on
+loglog(h, log(normeEL2))
+loglog(h, log(normeEH1))
+hold off
+legend('L2', 'H1', 'location', 'best')
+xlabel('log h')
+ylabel('log ||e||')
+
+figure
+title('\alpha')
+hold on
 plot(h(2:end), TauxEL2(2:end))
 plot(h(2:end), TauxEH1(2:end))
 hold off
 legend('L2', 'H1', 'location', 'best')
+xlabel('log h')
+ylabel('\alpha')
