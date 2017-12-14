@@ -1,6 +1,30 @@
 % FibreMain
-clear all
-clc
+function [r, phir betar, betas, post, phi, uEF, duEF, xEF]=FibreMain(nEls, pDegFM, VectPropre)
+%% Instructions
+%Inputs
+% nEls : DOIT ETRE UN NOMBRE PAIRE. C'est le nombre d'�l�ments
+% pDegFM : Ordre de p pour une fonction de forme lagrangienne
+% VectPropre : Sort les uEF, duEF, xEF pour le i�me vecteur propre. Donc,
+% si tu veux faire ton analyse pour le troisi�me vecteur et valeur propre,
+% tu mets =3 pour que uEF, duEF et xEF que la fonction te donne soit els
+% valeurs pour le troisi�me vecteur et valeur propre
+
+%Outputs
+% uEF, duEF, xEF : Te donne ce que tu veux. u est la fonction du ca d�riv�
+% et x le vecteur x correspondant. Te le donne pour un seul vecteur propre
+% correpondant � la valeur de VectPropre.
+% r : Vecteur x pour la solution exacte
+% phir : Solution exacte des vecteur propres. Chaque colonne est un vecteur
+% diff�rent. � besoin d'�tre normalis�. Divise par son max ou min, p-e *-1
+% si tu veux plot les deux solutions sur une m�me �chellle.
+% betar : Solution exacte des valeurs propres. Chaque colonne est une valeur diff�rent.
+
+% betas : Valeurs propres des �l�ments finis en ordre. C-�-d, que la
+% troisi�me valeur propre correspond � betas(3).
+% post : Te donne la position du vecteur propre correspondant. Si tu veux
+% le vecteur propre phi associ� � betas(3), tu fais phi(:,post(3)). Tu n'en
+% as pas besoin puisque tu vas utiliser les uEF, duEF, xEF
+
 
 %% Constantes
 ng = 1.457420;
@@ -30,10 +54,10 @@ V=k*rho*sqrt(nc^2-ng^2);
 m = 2;
 xMin=0;
 xMax=rho*m;
-nEls=m*20; %Doit �tre le m�me multiple que xMax pour qu'un node soit � rho
+%nEls=m*10; %Doit �tre le m�me multiple que xMax pour qu'un node soit � rho
 xn = 0;
 L=0;
-p = [1 1];
+p = [pDegFM 1];
 
 %% Cr�er le mesh
 [nN,nodes,connect,nB,bEls,bPts]=meshEF(xMin,xMax,nEls);
@@ -70,7 +94,8 @@ end
 betas = sqrt(beta2s);
 
 %% Obtenir un plot et les valeurs de u, du et x
-[uEF, duEF, xEF] = postProcFibre(nEls-1,nodes,connect,elDof,dFreedom,pDeg,pType,phi(:,post(3)));
+[uEF, duEF, xEF] = postProcFibre(nEls-1,nodes,connect,elDof,dFreedom,pDeg,pType,phi(:,post(VectPropre)));
 
 %% Obtenir la solution exacte
-[r phir]=SolutionExacte(400,xMax); %(Numbre de points pour le plot,jusqu'� o� va x)
+[r phir betar]=SolutionExacte(400,xMax); %(Numbre de points pour le plot,jusqu'� o� va x)
+end
