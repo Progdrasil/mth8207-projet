@@ -1,15 +1,9 @@
-function [norme, taux] = tauxConv(u_true, u_h, x, h_max, alpha, type_norme)
-	type_norme = upper(type_norme);
-	if (~strcmp(type_norme, 'L2') && ~strcmp(type_norme, 'H1'))
-		error('Type de norme pas reconnaissable');
-	end
-	fh = str2func(type_norme);
-	if (strcmp(type_norme, 'H1'))
-		C = fh(u_true - u_h, x, h_max);
-	else
-		C = fh(u_true - u_h, x);
-	end
-
-	norme= C * h_max^alpha;
-	taux= -1 * log(C) - alpha*log(1/h_max);
+function taux = tauxConv(e_pres, e_last, h_pres, h_last)
+%	tauxConv function
+%	inputs:
+%		- e_pres = norme of error of present analysis
+%		- e_last = norme of error of last analysis
+%		- h_pres = max element size of present analysis
+%		- h_last = max element size of last analysis
+	taux= log(e_last / e_pres) / log(h_last / h_pres);
 end

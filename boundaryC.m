@@ -6,7 +6,7 @@ Fbc=F;
 %set dirichlet boundary values
 u0(:,1)=zeros(m,1);
 u0(:,2)=zeros(m,1); %set different boundary points to different
-u0(1,1) = 1;
+u0(1,1) = 0;
 u0(m,2) = 1;
 
 %set Neumann boundary values

@@ -2,13 +2,16 @@
 clear all
 close all
 %*******************main code for the 1D finite element solver*************
-h = 2.^(2:13);
-xMin=-1;
+h(1) = 4;
+xMin=0;
 xMax=1;
 p = 1;
 
-fprintf('h \t\t ||u||L2 \t ||e||L2 \t log||e||L2 \t ||u||H1 \t ||e||H1 \t log||e||H1\n')
-for i = 1:length(h)
+fprintf('h \t\t ||e||L2 \t alpha_L2 \t ||e||H1 \t alpha_H1\n')
+for i = 1:10
+	if i > 1
+		h(i) = h(i-1) * 2;
+	end
 %**************************build mesh**************************************
 	nEls=(xMax - xMin) * h(i);
 	[nN,nodes,connect,nB,bEls,bPts]=mesh(xMin,xMax,nEls);
@@ -55,22 +58,35 @@ for i = 1:length(h)
 	xt = xt';
 	ut = xt .^ 2;
 	u_true = x_true .^ 2;
+	figure
+	hold on
+	plot(x_true, u_true)
+	plot(xt, u)
+	hold off
 
 	% estimation de l'erreur en L2
-	normeUL2(i) = L2(u, xt);
-	[normeEL2(i), TauxEL2(i)] = tauxConv(ut, u, xt, 1/h(i), p, 'l2');
+	normeEL2(i) = L2(u - ut, xt);
 
 	% estimation de l'erreur en H1
-	normeUH1(i) = H1(ut, xt, 1/h(i));
-	[normeEH1(i), TauxEH1(i)] = tauxConv(ut, u, xt, 1/h(i), p, 'h1');
+	normeEH1(i) = H1(u - ut, xt, 1/h(i));
+	if i > 1
+		% estimation taux de convergence en L2
+		TauxEL2(i) = tauxConv(normeEL2(i), normeEL2(i-1), 1/h(i), 1/h(i-1));
 
-	fprintf('1/%4d \t %8.7f \t %3.2e \t %5.4f \t\t %8.7f \t %3.2e \t %5.4f\n', h(i), normeUL2(i), normeEL2(i), TauxEL2(i), normeUH1(i), normeEH1(i), TauxEH1(i));
+		% estimation taux de covergence en H1
+		TauxEH1(i) = tauxConv(normeEH1(i), normeEH1(i-1), 1/h(i), 1/h(i-1));
+	else
+		TauxEL2(i) = 0;
+		TauxEH1(i) = 0;
+	end
+
+	fprintf('1/%4d \t %3.2e \t %5.4f \t %3.2e \t %5.4f\n', h(i), normeEL2(i), TauxEL2(i), normeEH1(i), TauxEH1(i));
 end
 
 figure
 title('taux de convergence L_2')
 hold on
-loglog(log(h), TauxEL2)
-loglog(log(h), TauxEH1)
+plot(h(2:end), TauxEL2(2:end))
+plot(h(2:end), TauxEH1(2:end))
 hold off
 legend('L2', 'H1', 'location', 'best')
