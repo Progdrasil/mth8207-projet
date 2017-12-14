@@ -11,53 +11,54 @@ k=2*pi/lambda;
 V=k*rho*sqrt(nc^2-ng^2);
 
 %% Ce que tu veux modifier
-%nEls, qui est le nombre d'éléments
+%nEls, qui est le nombre d'ï¿½lï¿½ments
 %sinon les solutions des EF sont dans phi et betas
 %Les trois premier betas sont les solutions physique. Leur fonction d'onde
 %correspondantes sont phi(:,post(1:3)). Chaque colonne de phi correspond a
 %une fonction et post te donne la position de la fonction. Donc si tu veux
-%la fonction d'onde associé au deuxième beta, ca sera la colonne post(2).
-%Sinon, c'est normal si l'amplitude entre les solutions réelles et d'ÉF
-%sont différentes. Il faut normaliser. Tu divises par le max ou le min la
-%solution réelle et *-1 dépendament du cas et tu obtiendras la même
+%la fonction d'onde associï¿½ au deuxiï¿½me beta, ca sera la colonne post(2).
+%Sinon, c'est normal si l'amplitude entre les solutions rï¿½elles et d'ï¿½F
+%sont diffï¿½rentes. Il faut normaliser. Tu divises par le max ou le min la
+%solution rï¿½elle et *-1 dï¿½pendament du cas et tu obtiendras la mï¿½me
 %expression. c'est normal.
 
-%Sinon, à la toute fin, tu as les valeurs de uEF, duEF et xEF correspondant
-%à la solution des éléments finis.
+%Sinon, ï¿½ la toute fin, tu as les valeurs de uEF, duEF et xEF correspondant
+%ï¿½ la solution des ï¿½lï¿½ments finis.
 
 
 %% Parametres
 m = 2;
 xMin=0;
 xMax=rho*m;
-nEls=m*20; %Doit être le même multiple que xMax pour qu'un node soit à rho
+nEls=m*20; %Doit ï¿½tre le mï¿½me multiple que xMax pour qu'un node soit ï¿½ rho
 xn = 0;
 L=0;
+p = [1 1];
 
-%% Créer le mesh
+%% Crï¿½er le mesh
 [nN,nodes,connect,nB,bEls,bPts]=meshEF(xMin,xMax,nEls);
 
 %% degrees of freedom
 
 pDeg=zeros(nEls,1);
-pDeg(:,1)=2;     %set polynomial degree for each element
+pDeg(:,1)=p(1);     %set polynomial degree for each element
 pType=zeros(nEls,1);
-pType(:,1)=2;   %set element type: 1=Lagrangian, 2=hierarchical
+pType(:,1)=p(2);   %set element type: 1=Lagrangian, 2=hierarchical
 
 [elDof,dFreedom]=dof(nEls,pDeg,connect);
 
 
-%% Calculer les matrices du problème
-%Calculer la matrice de gauche d'éléments finis
-[A] = main1(nEls, xMin, xMax, xn, L);
+%% Calculer les matrices du problï¿½me
+%Calculer la matrice de gauche d'ï¿½lï¿½ments finis
+[A] = main1(nEls, xMin, xMax, xn, L, p);
 A(end,:)=0.;A(:,end)=0.;A(end,end)=1.;
 [As] = A(1:end-1,1:end-1);
-%Calculer la matrice de droite d'éléments finis
-[B] = main2(nEls, xMin, xMax, xn);
+%Calculer la matrice de droite d'ï¿½lï¿½ments finis
+[B] = main2(nEls, xMin, xMax, xn, p);
 B(end,:)=0.;B(:,end)=0.;
 [Bs] = B(1:end-1,1:end-1);
 
-%% Résoudre le problème de valeurs propres
+%% Rï¿½soudre le problï¿½me de valeurs propres
 [phi beta2] = eig(As, Bs);
 beta = sqrt(beta2);
 
@@ -72,5 +73,4 @@ betas = sqrt(beta2s);
 [uEF, duEF, xEF] = postProcFibre(nEls-1,nodes,connect,elDof,dFreedom,pDeg,pType,phi(:,post(3)));
 
 %% Obtenir la solution exacte
-[r phir]=SolutionExacte(400,xMax); %(Numbre de points pour le plot,jusqu'à où va x)
-
+[r phir]=SolutionExacte(400,xMax); %(Numbre de points pour le plot,jusqu'ï¿½ oï¿½ va x)
