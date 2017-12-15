@@ -1,25 +1,28 @@
-function [norme] = L2(uh, xh, ut, xt, nG)
+function [norme] = L2(uh, xh, ut, xt, nEls, xMax, xMin)
 	if (nargin == 2)
 		norme = sqrt(trapz(xh, uh .^ 2));
 		return;
 	end
 
-	if (nargin < 5)
+	% if (nargin < 5)
 		nG = 3;
-	end
+	% end
 
 	% premier points
 	k=1;
 	xe(k) = xh(1);
+	X(1) = xe(k);
 	uhj = uh(1);
 	utj = interp1(xt, ut, xe(k));
 	e(k) = (utj - uhj) ^ 2;
 
-	for i = 2: length(xh)
-		dxG = (xh(i) - xh(i-1)) / 3;
+	dxG = (xMax - xMin) / (nEls * nG);
+
+	for i = 2: length(nEls)
+		X(i) = xe(k);
 		for j = 1:nG
 			k = k + 1;
-			xe(k) = xh(i-1) + j * dxG;
+			xe(k) = X(i-1) + j * dxG;
 			uhj = interp1(xh, uh, xe(k));
 			utj = interp1(xt, ut, xe(k));
 			e(k) = (utj - uhj) ^ 2;

@@ -1,4 +1,4 @@
-function [norme] = H1(uh, Duh, xh, ut, Dut, xt, nG)
+function [norme] = H1(uh, Duh, xh, ut, Dut, xt, nEls, xMax, xMin)
 
 	% Duh = diff(uh)/h;
 
@@ -10,9 +10,9 @@ function [norme] = H1(uh, Duh, xh, ut, Dut, xt, nG)
 		norme = sqrt(nU^2 + nUp^2);
 		return;
 	else
-		if (nargin < 7)
+		% if (nargin < 7)
 			nG = 3;
-		end
+		% end
 
 		% Dut = diff(ut)/h;
 		[Dut, Duh] = normalise(Dut, Duh, false);

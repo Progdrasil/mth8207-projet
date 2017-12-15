@@ -19,7 +19,7 @@ W = sqrt(V.^2-U.^2);
 betar = sqrt(k^2*nc^2-(U./rho).^2);
 
 
-figure
+img = figure;
 for n=1:3
     phi1=@(x)besselj(0,U(n).*x./rho)./besselj(0,U(n));
     phi2=@(x)besselk(0,W(n).*x./rho)./besselk(0,W(n));
@@ -49,11 +49,15 @@ for n=1:3
     plot(r,phir(:,n))
 end
 hold off
-figure
+saveImg(img, 'sol_exact');
+
+Dimg = figure;
 hold on
 for n=1:3
 plot(r,dphir(:,n))
 end
 hold off
+
+saveImg(Dimg, 'd_sol_exact');
 
 end

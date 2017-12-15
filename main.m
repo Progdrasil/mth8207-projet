@@ -40,15 +40,20 @@ for j = 1:length(p)
 
 	for i = 1:length(nEls)
 		%% Calculs
+		if (nEls(i) == 64)
+			fig = true;
+		else
+			fig = false;
+		end
 		%%% Element finis
-		[betas, post, phi, uEF, duEF, xEF]=FibreMain(xMin, xMax, nEls(i), p(j), VectPropre, false);
+		[betas, post, phi, uEF, duEF, xEF]=FibreMain(xMin, xMax, nEls(i), p(j), VectPropre, phir(:, VectPropre), dphir(:, VectPropre), r, fig);
 
 		%% Analyse taux de convergence
 		% estimation de l'erreur en L2
-		normeEL2(i) = L2(uEF, xEF, phir(:,VectPropre), r);
+		normeEL2(i) = L2(uEF, xEF, phir(:,VectPropre), r, nEls(i), xMax, xMin);
 
 		% estimation de l'erreur en H1
-		normeEH1(i) = H1(uEF, duEF, xEF, phir(:,VectPropre), dphir(:,VectPropre), r);
+		normeEH1(i) = H1(uEF, duEF, xEF, phir(:,VectPropre), dphir(:,VectPropre), r, nEls(i), xMax, xMin);
 
 		% erreur quantiter d'interets
 		EBeta(i) = abs(betar(VectPropre) - betas(VectPropre));
@@ -69,7 +74,7 @@ for j = 1:length(p)
 
 		fprintf('1/%4d \t %3.2e \t %5.4f \t %3.2e \t %5.4f \t %3.2e \t %5.4f\n', nEls(i), normeEL2(i), TauxEL2(i), normeEH1(i), TauxEH1(i), EBeta(i), TauxBeta(i));
 	end
-	figure
+	figErr = figure;
 	subplot(2, 1, 1)
 	title(strcat('Analyse erreurs avec p = ', num2str(p(j))))
 	hold on
@@ -89,7 +94,7 @@ for j = 1:length(p)
 	ylabel('log ||e||')
 	xlabel('log 1/h')
 
-	figure
+	figBeta = figure;
 	subplot(2, 1, 1)
 	title(strcat('Analyse Vecteurs Propres avec p = ', num2str(p(j))))
 	plot(h, TauxBeta)
@@ -100,4 +105,7 @@ for j = 1:length(p)
 	loglog(1./h, EBeta)
 	ylabel('log ||e_{\beta}||')
 	xlabel('log 1/h')
+
+	saveImg(figErr, strcat('err_p', num2str(p(j))));
+	saveImg(figBeta, strcat('beta_p', num2str(p(j))));
 end
