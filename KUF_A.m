@@ -1,7 +1,9 @@
-function [K]=main2(nEls, xMin, xMax, xn, p)
-clc
-%*******************main code for the 1D finite element solver*************
+function [K]=KUF_A(nEls, xMin, xMax, xn, L, p)
 
+%*******************main code for the 1D finite element solver*************
+%		p = vecteur de taille 2
+%			P(1) = degree polynomial
+%			P(2) = type d'element (1: lagrangian, 2: hierarchical)
 %**************************build mesh**************************************
 
 % alpha=1;
@@ -33,9 +35,9 @@ pType(:,1)=p(2);   %set element type: 1=Lagrangian, 2=hierarchical
 %build k and f for each element; sum to find K and F
 %set k,c,b,f:
 syms x
-k=@(x)0;
-c=@(x)0;
-b=@(x)x.^(xn);
+k=@(x)-x.^(xn);
+c=@(x)1*x.^(xn-1);
+b=@(x)(((1.462420-0.005.*heaviside(x-8.335e-6)).*2.*pi./0.6328e-6).^2).*x.^(xn)+L.^2.*x.^(xn-2);
 f=@(x)0;
 %f=@(x)(heaviside(x-.5)-heaviside(x-.6))*-1;
 [K,F]=element(nEls,nodes,connect,xiQ,wQ,pDeg,pType,elDof,dFreedom,k,c,b,f);

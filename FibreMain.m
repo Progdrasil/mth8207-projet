@@ -74,11 +74,11 @@ pType(:,1)=p(2);   %set element type: 1=Lagrangian, 2=hierarchical
 
 %% Calculer les matrices du probl�me
 %Calculer la matrice de gauche d'�l�ments finis
-[A] = main1(nEls, xMin, xMax, xn, L, p);
+[A] = KUF_A(nEls, xMin, xMax, xn, L, p);
 A(end,:)=0.;A(:,end)=0.;A(end,end)=1.;
 [As] = A(1:end-1,1:end-1);
 %Calculer la matrice de droite d'�l�ments finis
-[B] = main2(nEls, xMin, xMax, xn, p);
+[B] = KUF_B(nEls, xMin, xMax, xn, p);
 B(end,:)=0.;B(:,end)=0.;
 [Bs] = B(1:end-1,1:end-1);
 
