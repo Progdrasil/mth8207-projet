@@ -1,4 +1,4 @@
-function [r phir]=SolutionExacte(nEls,mfibre)
+function [r phir betar]=SolutionExacte(nEls,mfibre)
 %Solution exacte
 
 %Constantes
@@ -22,7 +22,7 @@ figure
 for n=1:3
     phi1=@(x)besselj(0,U(n).*x./rho)./besselj(0,U(n));
     phi2=@(x)besselk(0,W(n).*x./rho)./besselk(0,W(n));
-    
+
     r = 0:rho/(nEls-1):mfibre;
     nb = 1;
     for x = 0:rho/(nEls-1):mfibre
