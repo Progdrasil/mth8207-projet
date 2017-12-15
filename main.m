@@ -24,7 +24,7 @@ xMax=rho*m;
 h = (xMax - xMin) ./ nEls;
 
 %%% Solution exacte
-[r phir betar]=SolutionExacte(400,xMax); %(Numbre de points pour le plot,jusqu'� o� va x)
+[r phir betar dphir]=SolutionExacte(400,xMax); %(Numbre de points pour le plot,jusqu'� o� va x)
 
 for j = 1:length(p)
 	%% Reinit les vecteurs
@@ -48,7 +48,7 @@ for j = 1:length(p)
 		normeEL2(i) = L2(uEF, xEF, phir(:,VectPropre), r);
 
 		% estimation de l'erreur en H1
-		normeEH1(i) = H1(uEF, duEF, xEF, h(i), phir(:,VectPropre), r);
+		normeEH1(i) = H1(uEF, duEF, xEF, phir(:,VectPropre), dphir(:,VectPropre), r);
 
 		% erreur quantiter d'interets
 		EBeta(i) = abs(betar(VectPropre) - betas(VectPropre));
@@ -87,7 +87,7 @@ for j = 1:length(p)
 	hold off
 	legend('L2', 'H1', 'location', 'best')
 	ylabel('log ||e||')
-	xlabel('log h')
+	xlabel('log 1/h')
 
 	figure
 	subplot(2, 1, 1)
@@ -99,5 +99,5 @@ for j = 1:length(p)
 	subplot(2, 1, 2)
 	loglog(1./h, EBeta)
 	ylabel('log ||e_{\beta}||')
-	xlabel('log h')
+	xlabel('log 1/h')
 end

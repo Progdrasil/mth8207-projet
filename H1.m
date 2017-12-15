@@ -1,8 +1,8 @@
-function [norme] = H1(uh, Duh, xh, h, ut, xt, nG)
+function [norme] = H1(uh, Duh, xh, ut, Dut, xt, nG)
 
 	% Duh = diff(uh)/h;
 
-	if (nargin <= 4)
+	if (nargin <= 3)
 		% calculs normes L2
 		nUp = L2(Duh, xh(1:length(Duh)));
 		nU = L2(uh, xh);
@@ -14,7 +14,8 @@ function [norme] = H1(uh, Duh, xh, h, ut, xt, nG)
 			nG = 3;
 		end
 
-		Dut = diff(ut)/h;
+		% Dut = diff(ut)/h;
+		[Dut, Duh] = normalise(Dut, Duh, false);
 
 		% calculs normes L2
 		nEp = L2(Duh, xh(1:length(Duh)), Dut, xt(1:length(Dut)), nG);
