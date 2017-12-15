@@ -1,6 +1,8 @@
-function [uEF, duEF, xEF] = postProcFibre(nEls,nodes,connect,elDof,dFreedom,pDeg,pType,u)
+function [uEF, duEF, xEF] = postProcFibre(nEls,nodes,connect,elDof,dFreedom,pDeg,pType,u, fig)
 %plot the solution u and its derivative
-figure
+if fig
+	figure
+end
 for ne=1:nEls
     for i=1:elDof(ne)
         c=dFreedom(ne,i);
@@ -33,16 +35,18 @@ for ne=1:nEls
             %             end
         end
     end
-    
-    subplot(1,2,1)
-    hold on
-    axis square
-    plot(x,u)
-    subplot(1,2,2)
-    hold on
-    axis square
-    plot(x,du)
-    
+
+	if fig
+	    subplot(1,2,1)
+	    hold on
+	    axis square
+	    plot(x,u)
+	    subplot(1,2,2)
+	    hold on
+	    axis square
+	    plot(x,du)
+	end
+
     uEF(ne) = u(1);
     duEF(ne) = du(1);
     xEF(ne) = x(1);

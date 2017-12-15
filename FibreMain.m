@@ -1,5 +1,5 @@
 % FibreMain
-function [r, phir betar, betas, post, phi, uEF, duEF, xEF]=FibreMain(xMin, xMax, nEls, pDegFM, VectPropre)
+function [betas, post, phi, uEF, duEF, xEF]=FibreMain(xMin, xMax, nEls, pDegFM, VectPropre, fig)
 %% Instructions
 %Inputs
 % nEls : DOIT ETRE UN NOMBRE PAIRE. C'est le nombre d'�l�ments
@@ -94,8 +94,8 @@ end
 betas = sqrt(beta2s);
 
 %% Obtenir un plot et les valeurs de u, du et x
-[uEF, duEF, xEF] = postProcFibre(nEls-1,nodes,connect,elDof,dFreedom,pDeg,pType,phi(:,post(VectPropre)));
+[uEF, duEF, xEF] = postProcFibre(nEls-1,nodes,connect,elDof,dFreedom,pDeg,pType,phi(:,post(VectPropre)), fig);
 
 %% Obtenir la solution exacte
-[r phir betar]=SolutionExacte(400,xMax); %(Numbre de points pour le plot,jusqu'� o� va x)
+% [r phir betar]=SolutionExacte(400,xMax); %(Numbre de points pour le plot,jusqu'� o� va x)
 end

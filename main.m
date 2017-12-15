@@ -4,8 +4,8 @@ clc;
 
 %% Valeurs d'imortance
 %%% Variables
-nEls = 8;
-pDegFM = 1;
+nEls = 2.^(2:8);
+p = 1:3;
 VectPropre = 3;
 i=1;
 
@@ -21,29 +21,83 @@ V=k*rho*sqrt(nc^2-ng^2);
 m = 2;
 xMin=0;
 xMax=rho*m;
+h = (xMax - xMin) ./ nEls;
 
-%% Debut du tableaux
-fprintf('h \t\t ||e||L2 \t alpha_L2 \t ||e||H1 \t alpha_H1\n')
+%%% Solution exacte
+[r phir betar]=SolutionExacte(400,xMax); %(Numbre de points pour le plot,jusqu'� o� va x)
 
-%% Calculs
-[r, phir betar, betas, post, phi, uEF, duEF, xEF]=FibreMain(xMin, xMax, nEls, pDegFM, VectPropre);
+for j = 1:length(p)
+	%% Reinit les vecteurs
+	normeEL2 = [];
+	normeEH1 = [];
+	EBeta 	= [];
+	TauxEL2 = [];
+	TauxEH1 = [];
+	TauxBeta = [];
+	%% Debut des tableaux
+	fprintf('\nSolutions pour P = %1d\n', p(j))
+	fprintf('h \t\t ||e||L2 \t alpha_L2 \t ||e||H1 \t alpha_H1 \t ||e||beta \t alpha_beta\n')
 
+	for i = 1:length(nEls)
+		%% Calculs
+		%%% Element finis
+		[betas, post, phi, uEF, duEF, xEF]=FibreMain(xMin, xMax, nEls(i), p(j), VectPropre, false);
 
-%% Analyse taux de convergence
-% estimation de l'erreur en L2
-normeEL2(i) = L2(uEF, xEF, phir(:,VectPropre), r);
+		%% Analyse taux de convergence
+		% estimation de l'erreur en L2
+		normeEL2(i) = L2(uEF, xEF, phir(:,VectPropre), r);
 
-% estimation de l'erreur en H1
-normeEH1(i) = H1(uEF, xEF, 1/nEls(i), phir(:,VectPropre), r);
-if i > 1
-	% estimation taux de convergence en L2
-	TauxEL2(i) = tauxConv(normeEL2(i), normeEL2(i-1), 1/nEls(i), 1/nEls(i-1));
+		% estimation de l'erreur en H1
+		normeEH1(i) = H1(uEF, duEF, xEF, h(i), phir(:,VectPropre), r);
 
-	% estimation taux de covergence en H1
-	TauxEH1(i) = tauxConv(normeEH1(i), normeEH1(i-1), 1/nEls(i), 1/nEls(i-1));
-else
-	TauxEL2(i) = 0;
-	TauxEH1(i) = 0;
+		% erreur quantiter d'interets
+		EBeta(i) = abs(betar(VectPropre) - betas(VectPropre));
+		if i > 1
+			% estimation taux de convergence en L2
+			TauxEL2(i) = tauxConv(normeEL2(i), normeEL2(i-1), h(i), h(i-1));
+
+			% estimation taux de covergence en H1
+			TauxEH1(i) = tauxConv(normeEH1(i), normeEH1(i-1), h(i), h(i-1));
+
+			% estimation taux de covergence en H1
+			TauxBeta(i) = tauxConv(EBeta(i), EBeta(i-1), 1/nEls(i), h(i-1));
+		else
+			TauxEL2(i) = 0;
+			TauxEH1(i) = 0;
+			TauxBeta(i) = 0;
+		end
+
+		fprintf('1/%4d \t %3.2e \t %5.4f \t %3.2e \t %5.4f \t %3.2e \t %5.4f\n', nEls(i), normeEL2(i), TauxEL2(i), normeEH1(i), TauxEH1(i), EBeta(i), TauxBeta(i));
+	end
+	figure
+	subplot(2, 1, 1)
+	title(strcat('Analyse erreurs avec p = ', num2str(p(j))))
+	hold on
+	plot(h, TauxEL2)
+	plot(h, TauxEH1)
+	hold off
+	legend('L2', 'H1', 'location', 'best')
+	ylabel('\alpha(h)')
+	xlabel('h')
+
+	subplot(2, 1, 2)
+	hold on
+	loglog(1./h, normeEL2)
+	loglog(1./h, normeEH1)
+	hold off
+	legend('L2', 'H1', 'location', 'best')
+	ylabel('log ||e||')
+	xlabel('log h')
+
+	figure
+	subplot(2, 1, 1)
+	title(strcat('Analyse Vecteurs Propres avec p = ', num2str(p(j))))
+	plot(h, TauxBeta)
+	ylabel('\alpha(h)')
+	xlabel('h')
+
+	subplot(2, 1, 2)
+	loglog(1./h, EBeta)
+	ylabel('log ||e_{\beta}||')
+	xlabel('log h')
 end
-
-fprintf('1/%4d \t %3.2e \t %5.4f \t %3.2e \t %5.4f\n', nEls(i), normeEL2(i), TauxEL2(i), normeEH1(i), TauxEH1(i));
