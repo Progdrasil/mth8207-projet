@@ -1,4 +1,4 @@
-function [r phir betar]=SolutionExacte(nEls,mfibre)
+function [r phir betar dphir]=SolutionExacte(nEls,mfibre)
 %Solution exacte
 
 %Constantes
@@ -9,6 +9,7 @@ rho = 8.335e-6;
 lambda = 0.6328e-6;
 k=2*pi/lambda;
 V=k*rho*sqrt(nc^2-ng^2);
+mfibre = 2*rho;
 
 
 
@@ -22,14 +23,18 @@ figure
 for n=1:3
     phi1=@(x)besselj(0,U(n).*x./rho)./besselj(0,U(n));
     phi2=@(x)besselk(0,W(n).*x./rho)./besselk(0,W(n));
+    dphi1=@(x)0.5.*(besselj(-1,U(n).*x./rho)-besselj(1,U(n).*x./rho)).*U(n)./rho./besselj(0,U(n));
+    dphi2=@(x)-0.5.*(besselk(-1,U(n).*x./rho)+besselk(1,U(n).*x./rho)).*U(n)./rho./besselk(0,U(n));
 
     r = 0:rho/(nEls-1):mfibre;
     nb = 1;
     for x = 0:rho/(nEls-1):mfibre
         if x < rho
             phir(nb,n) = phi1(x);
+            dphir(nb,n) = dphi1(x);
         else
             phir(nb,n) = phi2(x);
+            dphir(nb,n) = dphi2(x);
         end
         nb = nb+1;
     end
@@ -42,6 +47,12 @@ for n=1:3
     end
     hold on
     plot(r,phir(:,n))
+end
+hold off
+figure
+hold on
+for n=1:3
+plot(r,dphir(:,n))
 end
 hold off
 
