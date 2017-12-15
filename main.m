@@ -78,12 +78,12 @@ for j = 1:length(p)
 	subplot(2, 1, 1)
 	title(strcat('Analyse erreurs avec p = ', num2str(p(j))))
 	hold on
-	plot(h, TauxEL2)
-	plot(h, TauxEH1)
+	plot(1./h, TauxEL2)
+	plot(1./h, TauxEH1)
 	hold off
 	legend('L2', 'H1', 'location', 'best')
 	ylabel('\alpha(h)')
-	xlabel('h')
+	xlabel('1/h')
 
 	subplot(2, 1, 2)
 	hold on
@@ -97,9 +97,9 @@ for j = 1:length(p)
 	figBeta = figure;
 	subplot(2, 1, 1)
 	title(strcat('Analyse Vecteurs Propres avec p = ', num2str(p(j))))
-	plot(h, TauxBeta)
+	plot(1./h, TauxBeta)
 	ylabel('\alpha(h)')
-	xlabel('h')
+	xlabel('1/h')
 
 	subplot(2, 1, 2)
 	loglog(1./h, EBeta)

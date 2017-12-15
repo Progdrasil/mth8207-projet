@@ -11,23 +11,23 @@ function [norme] = L2(uh, xh, ut, xt, nEls, xMax, xMin)
 	% premier points
 	k=1;
 	xe(k) = xh(1);
-	X(1) = xe(k);
 	uhj = uh(1);
 	utj = interp1(xt, ut, xe(k));
 	e(k) = (utj - uhj) ^ 2;
 
 	dxG = (xMax - xMin) / (nEls * nG);
 
-	for i = 2: length(nEls)
+	for i = 1: length(nEls)
 		X(i) = xe(k);
 		for j = 1:nG
 			k = k + 1;
-			xe(k) = X(i-1) + j * dxG;
+			xe(k) = X(i) + j * dxG;
 			uhj = interp1(xh, uh, xe(k));
 			utj = interp1(xt, ut, xe(k));
 			e(k) = (utj - uhj) ^ 2;
-			if isnan(e(k))
+			if isnan(e(k)) || isnan(xe(k))
 				k = k-1;
+				error('fuck this shit')
 			end
 		end
 	end
