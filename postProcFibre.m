@@ -47,7 +47,12 @@ for ne=1:nEls
 	    plot(x,du)
 	end
 
-    uEF(ne) = u(1);
-    duEF(ne) = du(1);
-    xEF(ne) = x(1);
+    uEF((ne-1)*(nx-1)+1:(nx-1)) = u(1:(nx-1));
+    duEF((ne-1)*(nx-1)+1:(nx-1)) = du(1:(nx-1));
+    xEF((ne-1)*(nx-1)+1:(nx-1)) = x(1:(nx-1));
+    if ne==nEls
+        uEF((ne-1)*(nx-1)+1:(nx)) = u(1:(nx));
+        duEF((ne-1)*(nx-1)+1:(nx-1)) = du(1:(nx));
+        xEF((ne-1)*(nx-1)+1:(nx-1)) = x(1:(nx));
+    end
 end
