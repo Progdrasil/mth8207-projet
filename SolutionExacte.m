@@ -38,12 +38,11 @@ for n=1:3
 %     NLM = Nlm*V.^2./
     phirN(:,n) = phir(:,n)./max(abs(phir(:,n)));
     if phirN(1,n) <= 0
-        phirN(:,n) = -phirN(:,n)
+        phirN(:,n) = -phirN(:,n);
     end
     hold on
     plot(r,phir(:,n))
 end
 hold off
-betar
 
 end

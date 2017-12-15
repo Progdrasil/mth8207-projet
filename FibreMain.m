@@ -1,5 +1,5 @@
 % FibreMain
-function [r, phir betar, betas, post, phi, uEF, duEF, xEF]=FibreMain(nEls, pDegFM, VectPropre)
+function [r, phir betar, betas, post, phi, uEF, duEF, xEF]=FibreMain(xMin, xMax, nEls, pDegFM, VectPropre)
 %% Instructions
 %Inputs
 % nEls : DOIT ETRE UN NOMBRE PAIRE. C'est le nombre d'�l�ments
@@ -27,12 +27,12 @@ function [r, phir betar, betas, post, phi, uEF, duEF, xEF]=FibreMain(nEls, pDegF
 
 
 %% Constantes
-ng = 1.457420;
-nc = 1.462420;
-rho = 8.335e-6;
-lambda = 0.6328e-6;
-k=2*pi/lambda;
-V=k*rho*sqrt(nc^2-ng^2);
+% ng = 1.457420;
+% nc = 1.462420;
+% rho = 8.335e-6;
+% lambda = 0.6328e-6;
+% k=2*pi/lambda;
+% V=k*rho*sqrt(nc^2-ng^2);
 
 %% Ce que tu veux modifier
 %nEls, qui est le nombre d'�l�ments
@@ -50,10 +50,10 @@ V=k*rho*sqrt(nc^2-ng^2);
 %� la solution des �l�ments finis.
 
 
-%% Parametres
-m = 2;
-xMin=0;
-xMax=rho*m;
+% %% Parametres
+% m = 2;
+% xMin=0;
+% xMax=rho*m;
 %nEls=m*10; %Doit �tre le m�me multiple que xMax pour qu'un node soit � rho
 xn = 0;
 L=0;
